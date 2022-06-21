@@ -1,0 +1,61 @@
+{% assign date_day = settings.promobanner_date_day %}
+{% assign date_month = settings.promobanner_date_month %}
+{% assign date_year = settings.promobanner_date_year %}
+
+{% capture promobanner_countdown %}
+	<div id="promobanner_countdown">
+		<input class="knob days" data-fgColor="{{ settings.color_2 }}" data-width="100" data-height="100" data-readOnly="true" data-displayPrevious=true data-thickness=".075" data-min="0" data-max="365" value="75">
+		<input class="knob hour" data-fgColor="{{ settings.color_2 }}" data-width="100" data-height="100" data-readOnly="true" data-min="0" data-max="24" data-displayPrevious=true data-thickness=".075" value="75">
+		<input class="knob minute" data-fgColor="{{ settings.color_2 }}" data-width="100" data-height="100" data-readOnly="true" data-min="0" data-max="60" data-displayPrevious=true data-thickness=".075" value="75">
+		<input class="knob second" data-fgColor="{{ settings.color_2 }}" data-width="100" data-height="100" data-readOnly="true" data-min="0" data-max="60" data-displayPrevious=true data-thickness=".075" value="75">	</div>
+
+	<script>
+	jQuery(function($){
+		$(window).load(function() {
+			$("#promobanner_countdown").ccountdown({{ date_year }},{{ date_month }},{{ date_day }},'00:00'); //only need to pass target date and time
+			$('#promobanner_countdown .knob').removeAttr('style');
+			$('.knob.days').after('<span>days</span>');
+			$('.knob.hour').after('<span>hours</span>');
+			$('.knob.minute').after('<span>minutes</span>');
+			$('.knob.second').after('<span>seconds</span>');
+		});
+	});
+	</script>
+{% endcapture %}
+
+<div id="promobanner">
+	<a id="promobanner_close" href="#"></a>
+	<div class="promobanner_container">
+		<div class="promobanner_content">
+			<img src="{{ 'promobanner_img.png' | asset_url }}" alt="{{ settings.promobanner_title }} {{ settings.promobanner_tagline }}">
+
+			<div class="promobanner_text">
+				<h2>{{ settings.promobanner_title }}</h2>
+				
+				<a class="btn" href="{{ settings.promobanner_link }}">{{ settings.promobanner_btn }}</a>
+			</div>
+		</div>
+
+		<div class="promobanner_counter">
+			{% case date_day %}
+				{% when '30' %}
+					{% case date_month %}
+						{% when '02' %}
+							<div class="promobanner_error">Incorrect date</div>
+						{% else %}
+							{{ promobanner_countdown }}
+					{% endcase %}
+
+				{% when '31' %}
+					{% case date_month %}
+						{% when '02', '04', '06', '09', '11' %}
+							<div class="promobanner_error">Incorrect date</div>
+						{% else %}
+							{{ promobanner_countdown }}
+					{% endcase %}
+				{% else %}
+					{{ promobanner_countdown }}
+			{% endcase %}
+		</div>
+	</div>
+</div>

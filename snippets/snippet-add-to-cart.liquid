@@ -1,0 +1,14 @@
+<form method="post" action="/cart/add">
+    {% if product.available %}
+        {% if product.variants.size == 1 %}    
+            {% for variant in product.variants limit:1 %}
+                <input type="hidden" name="id" value="{{ variant.id }}" />
+                <button class="btn btn-cart" type="submit"> Add to cart</button>
+            {% endfor %}
+        {% else %}
+            <a class="btn btn-option" href="{{ product.url }}" title="Choose options">Choose options</a>
+        {% endif %}
+    {% else %}
+        <button class="btn btn-cart btn-disabled" disabled="disabled">Unavailable</button>
+    {% endif %}
+</form>
